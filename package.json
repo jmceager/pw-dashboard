@@ -1,0 +1,20 @@
+{
+  "name": "perp_walk",
+  "version": "1.0.0",
+  "description": "R Shiny Dashboard for visualizing the worst pipeline incidents in a given month",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmceager/pw-dashboard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jmceager/pw-dashboard/issues"
+  },
+  "homepage": "https://github.com/jmceager/pw-dashboard#readme"
+}
