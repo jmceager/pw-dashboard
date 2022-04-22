@@ -26,8 +26,10 @@ library(showtext)
 library(thematic)
 #> Loading required package: sysfonts
 #> Loading required package: showtextdb
+dir.create('~/.fonts')
+file.copy("www/Montserrat.ttf", "~/.fonts")
+system('fc-cache -f ~/.fonts')
 pstFont = "Montserrat"
-font_add_google(pstFont)
 #moved helper functions to separate script
 source("helpfun.R")
 
@@ -1253,7 +1255,7 @@ shinyServer( function(input, output, session) {
                                                                                     year(ymd(input$thisMonth)))
                )),
                color = "System")+
-          theme_pst(),
+          theme_pst(font = pstFont),
         varDict = list(NAME = "Operator"),
         width = (input$width*.7-250)/72,
         height = ((input$width*.7 - 250)/72)/1.62 
@@ -1301,7 +1303,7 @@ shinyServer( function(input, output, session) {
                                                                                       year(ymd(input$thisMonth)))
                                                                             )),
              color = "System")+
-        theme_pst(),
+        theme_pst(font = pstFont),
       #other args
       varDict = list(NAME = "Operator"),
       width = (input$width*.7-250)/72,

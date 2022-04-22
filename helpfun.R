@@ -6,8 +6,6 @@ library(ggthemes)
 library(showtext)
 #> Loading required package: sysfonts
 #> Loading required package: showtextdb
-pstFont = "Montserrat"
-font_add_google(pstFont)
 #### functions ####
 #fun little html function
 html <- function(x, inline = FALSE) {
@@ -196,7 +194,7 @@ yBreak <- function(data, log=c(T,F), output = c("b", "l")){
 }
 
 # theme clean adjustments to apply to ggplot
-theme_pst <- function() {
+theme_pst <- function(font = "Arial") {
   (theme(
                        axis.line.x = element_line(
                          colour = "#182125",
@@ -213,7 +211,7 @@ theme_pst <- function() {
                          size = 0.5,
                          linetype = "solid"
                        ),
-                       text = element_text(family = pstFont),
+                       text = element_text(family = font),
                        axis.text = element_text(colour = "#8C9394"),
                        axis.title = element_text(colour ="#C4C8C6"),
                        panel.grid.minor.y = element_line(linetype = "dotted", colour = "#29363D"),
