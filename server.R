@@ -1240,8 +1240,8 @@ shinyServer( function(input, output, session) {
                        limits = dayRange(input$thisMonth,if_else(input$periodSwitch, "y","m")),
                        name = ""
                        )+
-          scale_size(name = prettysize(),
-                     limits = c(0, max(incs[[input$sizeButton]])))+
+          scale_size(name = str_wrap(prettysize(),15),
+                     limits = c(0, max(df[[input$sizeButton]])))+
           scale_y_continuous(name = prettyweight(),
                              trans = if_else(input$logY == T, "pseudo_log","identity"),
                              breaks = yBreak(df[[input$weight]], input$logY,"b"),
@@ -1286,8 +1286,8 @@ shinyServer( function(input, output, session) {
                      limits = dayRange(input$thisMonth, if_else(input$periodSwitch, "y","m")),
                      name = ""
                      )+
-        scale_size(name = prettysize(),
-                   limits = c(0, max(bigdf[[input$sizeButton]])))+
+        scale_size(name = str_wrap(prettysize(),15),
+                   limits = c(0, max(df[[input$sizeButton]])))+
         scale_y_continuous(name = prettyweight(),
                            trans = if_else(input$logY == T, "pseudo_log","identity"),
                            breaks = yBreak(filter(plotData(),grepl("HL", SYSTEM_TYPE))[[input$weight]],
