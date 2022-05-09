@@ -64,7 +64,9 @@ incs <- read_csv("./data/all_inc.csv") %>%
   dplyr::filter(!grepl("GG",SYSTEM_TYPE), !grepl("UNGS",SYSTEM_TYPE)) %>%
   mutate(daytxt = as.character(MDY, format = "%b %d, %Y"),
          NUM_PUB_EVACUATED = replace_na(NUM_PUB_EVACUATED, 0),
-         humans = FATAL + INJURE) 
+         humans = FATAL + INJURE,
+         TOTAL_RELEASE = if_else(MSYS == "HL", TOTAL_RELEASE * 42, TOTAL_RELEASE),
+         UNITS = if_else(MSYS == "HL", "gal", UNITS)) 
   
 tab_cols <- c("NAME", "MDY","ILOC",  "FATAL","INJURE",
               "IGNITE_IND","EXPLODE_IND","NUM_PUB_EVACUATED",
@@ -978,7 +980,7 @@ shinyServer( function(input, output, session) {
         style = "white-space:pre-wrap; font-size: 2vw;"
       )
       ,
-      subtitle = HTML( paste0("Barrels of <em>", 
+      subtitle = HTML( paste0("Gallons of <em>", 
                               str_to_lower(recentHL()$COMMODITY_RELEASED_TYPE), 
                               "</em> released")),
       icon = tags$i(class = "fa-solid fa-fill-drip", style = "font-size: 3vw"),
@@ -1086,7 +1088,7 @@ shinyServer( function(input, output, session) {
                        fillColor = ~color,
                        color = ~color,
                        lat = ~LOCATION_LATITUDE, lng = ~LOCATION_LONGITUDE,
-                       popup = paste0( "<b>System:</b>",
+                       popup = paste0("<b>System:</b>",
                                        mapData()$SYSTEM_TYPE,
                                        "<br>",
                                        "<b>Place:</b> ", 
@@ -1133,14 +1135,14 @@ shinyServer( function(input, output, session) {
                         weightName = input$weight,
                         legName = "gasLeg")%>%
         addLegendCustom(weight = unlist(hazWeight[input$weight]),
-                        units = "BBL",
+                        units = "gal",
                         sys = "HL",
                         weightName = input$weight,
                         legName = "hazLeg")
     }
     else {
       units <- if_else(input$weight == "TOTAL_RELEASE" & input$system != "HL","mscf",
-                       if_else(input$weight == "TOTAL_RELEASE" & input$system == "HL", "BBL",
+                       if_else(input$weight == "TOTAL_RELEASE" & input$system == "HL", "gal",
                                "")
                        )
       leafProxy %>%
