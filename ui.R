@@ -61,7 +61,7 @@ header <- dashboardHeader(
                    incident flagged files and their pipeline mileage data. Both can be accessed 
                    through their website at the link below."),
             br(),
-            tags$a("PHMSA Data Overview", href = "https://www.phmsa.dot.gov/data-and-statistics/pipeline/data-and-statistics-overview", class = "source-link"),
+            tags$a("PHMSA Data Overview", href = "https://www.phmsa.dot.gov/data-and-statistics/pipeline/data-and-statistics-overview", target="_blank", class = "source-link"),
             placement = "bottom",
             arrow = T,
             theme = "material")
