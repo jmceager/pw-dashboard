@@ -116,7 +116,7 @@ sidebar <- dashboardSidebar(
                         "Hazardous Liquid" = "HL"),
                       selected = "all"),
          radioButtons("weight", "Determinant:",
-                      c("Spill Size" = "TOTAL_RELEASE",
+                      c("Release Size" = "TOTAL_RELEASE",
                         "Cost of Damage" = "TOTAL_COST_CURRENT",
                         "Deaths" = "FATAL",
                         "Deaths + Injuries" = "humans"),
