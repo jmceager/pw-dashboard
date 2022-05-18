@@ -332,17 +332,28 @@ shinyServer( function(input, output, session) {
   #count number of instances per subsidiary operator 
   output$repeatPerps <- renderReactable(
     if(input$system == "all"){
-      incidentReact()%>%
-        #data prep
+      #setup reactable data
+      iR <- incidentReact()%>%
         ungroup()%>%
         group_by(NAME)%>%
         mutate(inc = n())%>%
+        filter(inc >= 2)%>%
         ungroup()%>%
-        filter(inc >= if_else(input$weight == "FATAL" | input$weight == "humans",
-                              2,5))%>%
         select(!NARRATIVE)%>%
         mutate(SimSys = str_sub(SYSTEM_TYPE, 1,2),
-               STATE = replace_na(STATE, "Offshore"))%>%
+               STATE = replace_na(STATE, "Offshore"))
+      
+      #get top 10 names including ties
+      iList <- iR %>%
+        group_by(NAME)%>%
+        slice_max(inc, with_ties = F)%>%
+        ungroup()%>%
+        slice_max(n = 10, order_by = inc, with_ties = F)%>%
+        select(NAME)
+      
+      #filter
+      iR%>%
+        filter(NAME %in% iList$NAME)%>%
         ## reactable starts here
         reactable(
           groupBy = "NAME",
@@ -471,16 +482,28 @@ shinyServer( function(input, output, session) {
         )
     }
     else{
-      incidentReact()%>%
+      #setup reactable data
+      iR <- incidentReact()%>%
         ungroup()%>%
         group_by(NAME)%>%
         mutate(inc = n())%>%
+        filter(inc >= 2)%>%
         ungroup()%>%
-        filter(inc >= if_else(input$weight == "FATAL" | input$weight == "humans",
-                              2,5))%>%
         select(!NARRATIVE)%>%
         mutate(SimSys = str_sub(SYSTEM_TYPE, 1,2),
-               STATE = replace_na(STATE, "Offshore"))%>%
+               STATE = replace_na(STATE, "Offshore"))
+      
+      #get top 10 names including ties
+      iList <- iR %>%
+        group_by(NAME)%>%
+        slice_max(inc, with_ties = F)%>%
+        ungroup()%>%
+        slice_max(n = 10, order_by = inc, with_ties = F)%>%
+        select(NAME)
+      
+      #filter
+      iR%>%
+        filter(NAME %in% iList$NAME)%>%
         reactable(
           groupBy = "NAME",
           striped = TRUE,
