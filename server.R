@@ -370,7 +370,9 @@ shinyServer( function(input, output, session) {
             NAME = colDef(width = 150, 
                           align = "left",
                           name = "Operator"),
-            inc = colDef(name = "Perp Count", show = F),
+            inc = colDef(name = "Perp Count", 
+                         defaultSortOrder = "desc",
+                         show = F),
             STATE = colDef(aggregate = "unique",
                            name = "States"),
             SimSys = colDef(aggregate = "unique",
@@ -416,27 +418,61 @@ shinyServer( function(input, output, session) {
                                    format = colFormat(digits = 0,
                                                       separators = T)),
             IGNITE_IND = colDef(name = "Fire",
+                                html = T,
+                                align = "center",
                                 aggregate = JS(
                                 "function(values,rows){
                                  let totalFire = 0
+                                 let nrow = 0
                                  rows.forEach(function(row) {
                                    if(row['IGNITE_IND'] == 'YES'){
                                    totalFire += 1
                                    }
+                                   nrow += 1
                                  })
-                                 return totalFire
+                                 let perFire = Math.round(totalFire*100 / rows.length)
+                                 
+                                 const sliceColor = '#FFFFFF'
+                                 const sliceLength = 2 * Math.PI * 24
+                                 const sliceOffset = sliceLength * (1 - perFire / 100)
+                                 const donutChart = (
+                                   '<svg width=60 height=60 style=\"transform: rotate(-90deg)\" focusable=false>' +
+                                     '<circle cx=30 cy=30 r=24 fill=none stroke-width=4 stroke=rgba(0,0,0,0.1)></circle>' +
+                                     '<circle cx=30 cy=30 r=24 fill=none stroke-width=4 stroke=' + sliceColor +
+                                     ' stroke-dasharray=' + sliceLength + ' stroke-dashoffset=' + sliceOffset + '></circle>' +
+                                   '</svg>'
+                                 )
+                                 const label = '<div style=\"position: absolute; top: 50%; left: 50%; ' +
+                                   'transform: translate(-50%, -50%)\">' + (perFire) + '%' + '</div>'
+                                 return '<div style=\"display: inline-flex; position: relative\">' + donutChart + label + '</div>'
                                  }"
                                 )),
             EXPLODE_IND = colDef(name = "Explosion",
+                                 html = T,
+                                 align = "center",
                                  aggregate = JS(
                                    "function(values,rows){
-                                    let totalFire = 0
+                                    let totalExp = 0
                                     rows.forEach(function(row) {
-                                      if(row['IGNITE_IND'] == 'YES'){
-                                      totalFire += 1
+                                      if(row['EXPLODE_IND'] == 'YES'){
+                                      totalExp += 1
                                       }
                                     })
-                                    return totalFire
+                                    let perExp = Math.round(totalExp*100 / rows.length)
+                                 
+                                    const sliceColor = '#FFFFFF'
+                                    const sliceLength = 2 * Math.PI * 24
+                                    const sliceOffset = sliceLength * (1 - perExp / 100)
+                                    const donutChart = (
+                                      '<svg width=60 height=60 style=\"transform: rotate(-90deg)\" focusable=false>' +
+                                        '<circle cx=30 cy=30 r=24 fill=none stroke-width=4 stroke=rgba(0,0,0,0.1)></circle>' +
+                                        '<circle cx=30 cy=30 r=24 fill=none stroke-width=4 stroke=' + sliceColor +
+                                        ' stroke-dasharray=' + sliceLength + ' stroke-dashoffset=' + sliceOffset + '></circle>' +
+                                      '</svg>'
+                                    )
+                                    const label = '<div style=\"position: absolute; top: 50%; left: 50%; ' +
+                                      'transform: translate(-50%, -50%)\">' + (perExp) + '%' + '</div>'
+                                    return '<div style=\"display: inline-flex; position: relative\">' + donutChart + label + '</div>'
                                     }"  
                                    )),
             MoYr = colDef(show = F),
