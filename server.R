@@ -69,12 +69,12 @@ incs <- read_csv("./data/all_inc.csv") %>%
          UNITS = if_else(MSYS == "HL", "gal", UNITS)) 
   
 tab_cols <- c("NAME", "MDY","ILOC",  "FATAL","INJURE",
-              "IGNITE_IND","EXPLODE_IND","NUM_PUB_EVACUATED",
+              "NUM_PUB_EVACUATED","IGNITE_IND","EXPLODE_IND",
               "COMMODITY_RELEASED_TYPE", "STATE",
               "TOTAL_RELEASE","TOTAL_COST_CURRENT","CAUSE", "NARRATIVE")
 
 all_cols <- c("NAME", "MDY", "ILOC", "SYSTEM_TYPE","FATAL","INJURE",
-              "IGNITE_IND","EXPLODE_IND","NUM_PUB_EVACUATED",
+              "NUM_PUB_EVACUATED","IGNITE_IND","EXPLODE_IND",
               "TOTAL_RELEASE", "UNITS","COMMODITY_RELEASED_TYPE", 
               "TOTAL_COST_CURRENT","CAUSE", "NARRATIVE", "STATE")
 
