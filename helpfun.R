@@ -4,6 +4,7 @@ library(htmlwidgets)
 library(scales)
 library(ggthemes)
 library(showtext)
+library(viridis)
 #> Loading required package: sysfonts
 #> Loading required package: showtextdb
 #### functions ####
@@ -129,7 +130,25 @@ dayRange <- function(date, period =c("m","y")) {
 }
 
 ## color scaler for Repeat table
-
+#palette can be any viridis palette a through h
+colorScale <- function(x, pal = LETTERS[seq(1,8)], dir = -1, scale = c("P","N")){
+  vPal <- viridis(n = 100, option = pal)
+  #scale x
+  if(scale == "P"){
+    if(max(x) <= 1){
+      xScale <- round( x*100)
+    }
+    else{
+      xScale <- round(x)
+    }
+  }
+  else if(scale == "N"){
+    xScale <- round(((x - min(x)) / (max(x)-min(x)))*100)
+  }
+  # get the colors 
+  xCol <- vPal[xScale]
+  return(xCol)
+}
 
 ## y breaks and labs 
 yBreak <- function(data, log=c(T,F), output = c("b", "l")){
