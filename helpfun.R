@@ -128,6 +128,9 @@ dayRange <- function(date, period =c("m","y")) {
   c(start, end)
 }
 
+## color scaler for Repeat table
+
+
 ## y breaks and labs 
 yBreak <- function(data, log=c(T,F), output = c("b", "l")){
   yMax <- max(data, na.rm = T)
