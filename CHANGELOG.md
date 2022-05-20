@@ -1,3 +1,21 @@
+### 1.1.0 (2022-05-20)
+
+##### Bug Fixes
+
+*  length of boolean in colorScale function ([cc63ff93](https://github.com/jmceager/pw-dashboard/commit/cc63ff9321b7eaeae9485cb93c6e708ad0cb7388))
+
+##### Other Changes
+
+*  added shaded circles to RO table and improved donuts ([b7b267a3](https://github.com/jmceager/pw-dashboard/commit/b7b267a3122a8e265d10fb5dcb4b13d7e09c6d5e))
+*  added shaded donut plots to RO table in fire & explosion cols ([f08f1096](https://github.com/jmceager/pw-dashboard/commit/f08f109658e720dfe25e98079a34694aa7d6bf37))
+*  update color scaler to include color brewer palettes ([f61ee16e](https://github.com/jmceager/pw-dashboard/commit/f61ee16ece6cd8324844cb988fad4931f78d152f))
+*  wrote color scaler function for RO table styling ([fdf358c0](https://github.com/jmceager/pw-dashboard/commit/fdf358c0f720712a4c70e981dd261ef3d4ce7c69))
+*  update changelog 1.1 ([685aa9b9](https://github.com/jmceager/pw-dashboard/commit/685aa9b957f6f089f1e96f0b1b6b54a3ca30d0c5))
+
+##### Refactors
+
+*  expanded colorScale conditional statements ([04713f46](https://github.com/jmceager/pw-dashboard/commit/04713f467696407f92b309ddb6f0acd732f0a990))
+
 ### 1.1.0 (2022-05-19)
 
 ##### Documentation Changes
