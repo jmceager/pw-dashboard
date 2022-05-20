@@ -133,7 +133,7 @@ dayRange <- function(date, period =c("m","y")) {
 #palette can be any viridis palette a through h
 colorScale <- function(x, pal, dir = -1, scale = c("P","N")){
   #pick viridis or brewer gradient based on input
-  cPal <- ifelse(pal %in% LETTERS[seq(1,8)],
+  cPal <- ifelse(rep(pal %in% LETTERS[seq(1,8)], length(x)),
                  viridis(n = 101, option = pal),
                  gradient_n_pal(brewer_pal(palette = pal)(5))(seq(0, 1, length.out = 101)))
   #scale x
