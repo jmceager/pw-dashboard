@@ -335,13 +335,19 @@ shinyServer( function(input, output, session) {
       #setup reactable data
       iR <- incidentReact()%>%
         ungroup()%>%
+        mutate(IGIN = if_else(IGNITE_IND == "YES", 1, 0),
+               EXIN = if_else(EXPLODE_IND == "YES", 1, 0))%>%
         group_by(NAME)%>%
-        mutate(inc = n())%>%
+        mutate(inc = n(),
+               IGIN = sum(IGIN)/inc,
+               EXIN = sum(EXIN)/inc)%>%
         filter(inc >= 2)%>%
         ungroup()%>%
         select(!NARRATIVE)%>%
         mutate(SimSys = str_sub(SYSTEM_TYPE, 1,2),
-               STATE = replace_na(STATE, "Offshore"))
+               STATE = replace_na(STATE, "Offshore"),
+               igCol = colorScale(IGIN, pal = "F", scale = "P"),
+               exCol = colorScale(EXIN, pal = "F", scale = "P"))
       
       #get top 10 names including ties
       iList <- iR %>%
@@ -430,9 +436,9 @@ shinyServer( function(input, output, session) {
                                    }
                                    nrow += 1
                                  })
-                                 let perFire = Math.round(totalFire*100 / rows.length)
+                                 let perFire = Math.round(rows[0]['IGIN'] * 100 )
                                  
-                                 const sliceColor = '#FFFFFF'
+                                 const sliceColor = rows[0]['igCol']
                                  const sliceLength = 2 * Math.PI * 24
                                  const sliceOffset = sliceLength * (1 - perFire / 100)
                                  const donutChart = (
@@ -458,11 +464,11 @@ shinyServer( function(input, output, session) {
                                       totalExp += 1
                                       }
                                     })
-                                    let perExp = Math.round(totalExp*100 / rows.length)
+                                    let perExp = Math.round( rows[0]['EXIN'] * 100)
                                  
-                                    const sliceColor = '#FFFFFF'
+                                    const sliceColor = rows[0]['exCol']
                                     const sliceLength = 2 * Math.PI * 24
-                                    const sliceOffset = sliceLength * (1 - perExp / 100)
+                                    const sliceOffset = sliceLength * (1- perExp /100)
                                     const donutChart = (
                                       '<svg width=60 height=60 style=\"transform: rotate(-90deg)\" focusable=false>' +
                                         '<circle cx=30 cy=30 r=24 fill=none stroke-width=4 stroke=rgba(0,0,0,0.1)></circle>' +
