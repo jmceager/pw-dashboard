@@ -340,14 +340,20 @@ shinyServer( function(input, output, session) {
         group_by(NAME)%>%
         mutate(inc = n(),
                IGIN = sum(IGIN)/inc,
-               EXIN = sum(EXIN)/inc)%>%
+               EXIN = sum(EXIN)/inc,
+               FS = sum(FATAL),
+               IS = sum(INJURE),
+               ES = sum(NUM_PUB_EVACUATED))%>%
         filter(inc >= 2)%>%
         ungroup()%>%
         select(!NARRATIVE)%>%
         mutate(SimSys = str_sub(SYSTEM_TYPE, 1,2),
                STATE = replace_na(STATE, "Offshore"),
-               igCol = colorScale(IGIN, pal = "F", scale = "P"),
-               exCol = colorScale(EXIN, pal = "F", scale = "P"))
+               igCol = colorScale(IGIN, pal = "YlOrRd", scale = "P"),
+               exCol = colorScale(EXIN, pal = "YlOrRd", scale = "P"),
+               fCol = colorScale(FS, pal = "OrRd", scale = "N"),
+               iCol = colorScale(IS, pal = "OrRd", scale = "N"),
+               eCol = colorScale(ES, pal = "Oranges", scale = "N", begin = .4))
       
       #get top 10 names including ties
       iList <- iR %>%
@@ -383,12 +389,78 @@ shinyServer( function(input, output, session) {
                            name = "States"),
             SimSys = colDef(aggregate = "unique",
                             name = "System"),
-            FATAL = colDef(aggregate = "sum",
-                           name = "Deaths"),
-            INJURE = colDef(aggregate = "sum",
-                            name = "Injuries"),
-            NUM_PUB_EVACUATED = colDef(aggregate = "sum",
-                                       name = "Public Evacuated"),
+            FATAL = colDef(name = "Deaths",
+                           html = T,
+                           align = "center",
+                           aggregate = JS(
+                             "function(values, rows){
+                             let fatal = 0 
+                             rows.forEach(function(row){
+                              fatal += row['FATAL']
+                              })
+                             const preCol = \"%23\"
+                             const circleColor = rows[0]['fCol']
+                             const gradCircle = (
+                               '<svg width=45 height=45 focusable=false>' +
+                                '<circle cx=22.5 cy=22.5 r=18 fill='+ circleColor + ' stroke-width=2 stroke=rgba(170,170,170,0.03)></circle>' +
+                               '</svg>'
+                             )
+                               
+                             const label = '<div style=\"position: absolute; top: 50%; left: 50%; ' +
+                                   'color:black; font-size:1.1vw; font-weight:600;'+
+                                   'transform: translate(-50%, -50%); \">' + fatal + '</div>'
+                               
+                             return '<div style=\"display: inline-flex; position: relative\">' + gradCircle + label + '</div>'
+                             }"
+                           )),
+            INJURE = colDef(name = "Injuries",
+                            html = T,
+                            align = "center",
+                            aggregate = JS(
+                              "function(values, rows){
+                               let injure = 0 
+                               rows.forEach(function(row){
+                                injure += row['INJURE']
+                                })
+                               const preCol = \"%23\"
+                               const circleColor = rows[0]['iCol']
+                               const gradCircle = (
+                                 '<svg width=45 height=45 focusable=false>' +
+                                  '<circle cx=22.5 cy=22.5 r=18 fill='+ circleColor + ' stroke-width=2 stroke=rgba(170,170,170,0.03)></circle>' +
+                                 '</svg>'
+                               )
+                                 
+                               const label = '<div style=\"position: absolute; top: 50%; left: 50%; ' +
+                                     'color:black; font-size:1.1vw;font-weight:600; '+
+                                     'transform: translate(-50%, -50%); \">' + injure + '</div>'
+                                 
+                               return '<div style=\"display: inline-flex; position: relative\">' + gradCircle + label + '</div>'
+                               }"
+                            )),
+            NUM_PUB_EVACUATED = colDef(name = "Public Evacuated",
+                                       html = T,
+                                       align = "center",
+                                       aggregate = JS(
+                                         "function(values, rows){
+                                         let evac = 0 
+                                         rows.forEach(function(row){
+                                          evac += row['NUM_PUB_EVACUATED']
+                                          })
+                                         const preCol = \"%23\"
+                                         const circleColor = rows[0]['eCol']
+                                         const gradCircle = (
+                                           '<svg width=45 height=45 focusable=false>' +
+                                            '<circle cx=22.5 cy=22.5 r=18 fill='+ circleColor + ' stroke-width=2 stroke=rgba(170,170,170,0.03)></circle>' +
+                                           '</svg>'
+                                         )
+                                           
+                                         const label = '<div style=\"position: absolute; top: 50%; left: 50%; ' +
+                                               'color:black; font-size:1.1vw; font-weight:600;'+
+                                               'transform: translate(-50%, -50%); \">' + evac + '</div>'
+                                           
+                                         return '<div style=\"display: inline-flex; position: relative\">' + gradCircle + label + '</div>'
+                                         }"
+                                       )),
             TOTAL_RELEASE = colDef(aggregate = JS(
               "function(values,rows){
               let mscfRel = 0
@@ -442,14 +514,14 @@ shinyServer( function(input, output, session) {
                                  const sliceLength = 2 * Math.PI * 24
                                  const sliceOffset = sliceLength * (1 - perFire / 100)
                                  const donutChart = (
-                                   '<svg width=60 height=60 style=\"transform: rotate(-90deg)\" focusable=false>' +
-                                     '<circle cx=30 cy=30 r=24 fill=none stroke-width=4 stroke=rgba(0,0,0,0.1)></circle>' +
-                                     '<circle cx=30 cy=30 r=24 fill=none stroke-width=4 stroke=' + sliceColor +
+                                   '<svg width=50 height=50 style=\"transform: rotate(-90deg)\" focusable=false>' +
+                                     '<circle cx=25 cy=25 r=21 fill=none stroke-width=4 stroke=rgba(0,0,0,0.1)></circle>' +
+                                     '<circle cx=25 cy=25 r=21 fill=none stroke-width=4 stroke=' + sliceColor +
                                      ' stroke-dasharray=' + sliceLength + ' stroke-dashoffset=' + sliceOffset + '></circle>' +
                                    '</svg>'
                                  )
                                  const label = '<div style=\"position: absolute; top: 50%; left: 50%; ' +
-                                   'transform: translate(-50%, -50%)\">' + (perFire) + '%' + '</div>'
+                                   'font-weight:600;transform: translate(-50%, -50%)\">' + (perFire) + '%' + '</div>'
                                  return '<div style=\"display: inline-flex; position: relative\">' + donutChart + label + '</div>'
                                  }"
                                 )),
@@ -470,14 +542,14 @@ shinyServer( function(input, output, session) {
                                     const sliceLength = 2 * Math.PI * 24
                                     const sliceOffset = sliceLength * (1- perExp /100)
                                     const donutChart = (
-                                      '<svg width=60 height=60 style=\"transform: rotate(-90deg)\" focusable=false>' +
-                                        '<circle cx=30 cy=30 r=24 fill=none stroke-width=4 stroke=rgba(0,0,0,0.1)></circle>' +
-                                        '<circle cx=30 cy=30 r=24 fill=none stroke-width=4 stroke=' + sliceColor +
+                                      '<svg width=50 height=50 style=\"transform: rotate(-90deg)\" focusable=false>' +
+                                        '<circle cx=25 cy=25 r=21 fill=none stroke-width=4 stroke=rgba(0,0,0,0.1)></circle>' +
+                                        '<circle cx=25 cy=25 r=21 fill=none stroke-width=4 stroke=' + sliceColor +
                                         ' stroke-dasharray=' + sliceLength + ' stroke-dashoffset=' + sliceOffset + '></circle>' +
                                       '</svg>'
                                     )
                                     const label = '<div style=\"position: absolute; top: 50%; left: 50%; ' +
-                                      'transform: translate(-50%, -50%)\">' + (perExp) + '%' + '</div>'
+                                      'font-weight:600;transform: translate(-50%, -50%)\">' + (perExp) + '%' + '</div>'
                                     return '<div style=\"display: inline-flex; position: relative\">' + donutChart + label + '</div>'
                                     }"  
                                    )),
@@ -488,7 +560,8 @@ shinyServer( function(input, output, session) {
                                         aggregate = "sum",
                                         minWidth = 100,
                                         format = colFormat(currency = "USD",
-                                                           separators = TRUE)),
+                                                           separators = TRUE,
+                                                           digits = 0)),
             COMMODITY_RELEASED_TYPE = colDef(name = "Material Released",
                                              aggregate = JS(
                                                "function(values,rows){
@@ -507,7 +580,17 @@ shinyServer( function(input, output, session) {
                                              )),
             CAUSE = colDef(name = "Cause"),
             ILOC = colDef(name = "Place"),
-            MDY = colDef(name = "Date")
+            MDY = colDef(name = "Date"),
+            IGIN = colDef(show = F),
+            EXIN = colDef(show = F),
+            FS = colDef(show = F),
+            IS = colDef(show = F),
+            ES = colDef(show = F),
+            igCol = colDef(show = F),
+            exCol = colDef(show = F),
+            eCol = colDef(show = F),
+            iCol = colDef(show = F),
+            fCol = colDef(show = F)
           ),
           theme = reactableTheme(
             searchInputStyle = list(width = "100%"),
