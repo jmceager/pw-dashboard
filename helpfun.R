@@ -131,8 +131,11 @@ dayRange <- function(date, period =c("m","y")) {
 
 ## color scaler for Repeat table
 #palette can be any viridis palette a through h
-colorScale <- function(x, pal = LETTERS[seq(1,8)], dir = -1, scale = c("P","N")){
-  vPal <- viridis(n = 100, option = pal)
+colorScale <- function(x, pal, dir = -1, scale = c("P","N")){
+  #pick viridis or brewer gradient based on input
+  cPal <- ifelse(pal %in% LETTERS[seq(1,8)],
+                 viridis(n = 101, option = pal),
+                 gradient_n_pal(brewer_pal(palette = pal)(5))(seq(0, 1, length.out = 101)))
   #scale x
   if(scale == "P"){
     if(max(x) <= 1){
@@ -146,7 +149,7 @@ colorScale <- function(x, pal = LETTERS[seq(1,8)], dir = -1, scale = c("P","N"))
     xScale <- round(((x - min(x)) / (max(x)-min(x)))*100)
   }
   # get the colors 
-  xCol <- vPal[xScale]
+  xCol <- cPal[xScale+1]
   return(xCol)
 }
 
