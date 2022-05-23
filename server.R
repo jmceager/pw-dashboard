@@ -1238,6 +1238,9 @@ shinyServer( function(input, output, session) {
                        lat = ~LOCATION_LATITUDE, lng = ~LOCATION_LONGITUDE,
                        popup = paste0("<b>Operator:</b>",
                                       mapData()$NAME,
+                                      "<br>",
+                                      "<b>Date:</b>",
+                                      mapData()$MDY,
                                       "<b>System:</b>",
                                       mapData()$SYSTEM_TYPE,
                                       "<br>",
@@ -1361,7 +1364,7 @@ shinyServer( function(input, output, session) {
     if(input$system == "all" & input$weight == "TOTAL_RELEASE"){
       df <- plotData() %>%
         filter(!grepl("HL", SYSTEM_TYPE))
-      sysCol <- sysCol[1:4]
+      sysCol <- sysCol[1:4] #sysCol is the color dictionairy 
     }
     else{
       df <- plotData()
