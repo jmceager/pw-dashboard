@@ -257,6 +257,7 @@ theme_pst <- function(font = "Arial") {
                        legend.title = element_text( face = "bold", colour = "#C4C8C6"),
                        legend.position = "right",
                        legend.key = element_blank(),
+                       legend.margin = margin(4,12,4,6, "pt"),
                        #legend.background = element_blank(),
                        plot.background = element_rect(fill = "#233239"),
                        plot.title = element_text(face = "bold", colour = "#C4C8C6"),
