@@ -1241,6 +1241,7 @@ shinyServer( function(input, output, session) {
                                       "<br>",
                                       "<b>Date:</b>",
                                       mapData()$MDY,
+                                      "<br>",
                                       "<b>System:</b>",
                                       mapData()$SYSTEM_TYPE,
                                       "<br>",
