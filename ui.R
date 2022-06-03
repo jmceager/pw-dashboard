@@ -22,7 +22,7 @@ fargs$verify_fa <- FALSE
 formals(icon) <- fargs
 
 # two months ago day one 
-newDate <- Sys.Date() - months(2) - (day(Sys.Date())-1)
+newDate <- Sys.Date() - months(3) - (day(Sys.Date())-1)
 
 ## use dashboard pieces for ui 
 #### header  ####
